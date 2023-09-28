@@ -11,24 +11,8 @@ use std::io::Read;  // for read_to_string
 
 use subparse::SrtFile;
 use subparse::SubtitleFileInterface;
-// use subparse::timetypes::{TimeSpan, TimePoint, TimeDelta};
 
 
-// trait TimeEx {
-//     fn to_string (&self);
-// }
-
-// impl TimeEx for TimePoint {
-//     fn to_string (&self) -> String {
-//         format!("", )
-//     }
-// }
-
-// impl TimeEx for TimeDelta {
-//     fn to_string (&self) -> String {
-//         format!("", )
-//     }
-// }
 
 
 trait ListViewEx {
@@ -55,12 +39,8 @@ pub struct QuietWordsApp {
     // The video that will be loaded dynamically
     //loaded_video: RefCell<Option<nwg::Bitmap>>,
 
-    // The subs that will be loaded dynamically
-    // subtitles: RefCell<nwg::Bitmap>,
-
     #[nwg_control(
         size: (1200, 500),
-        // position: (300, 300),
         title: "Quiet Words - Subtitles Editor"
     )]
     #[nwg_events(
@@ -171,9 +151,17 @@ pub struct QuietWordsApp {
     #[nwg_layout_item(layout: layout, col: 0, row: 6, col_span: 3, row_span: 4)]
     subtitles_list: nwg::ListView,
 
+    // https://github.com/gabdube/native-windows-gui/blob/master/native-windows-gui/examples/basic_drawing_d.rs
+    // https://github.com/gabdube/native-windows-gui/blob/master/native-windows-gui/src/controls/extern_canvas.rs
+    // #[nwg_control(parent: Some(&(data.window)))]
     #[nwg_control]
+    #[nwg_events(
+        OnPaint: [QuietWordsApp::paint(SELF, EVT_DATA)],
+        OnMousePress: [QuietWordsApp::events(SELF, EVT)],
+    )]
     #[nwg_layout_item(layout: layout, col: 3, row: 2, col_span: 4, row_span: 7)]
-    img: nwg::ImageFrame,
+    // video: nwg::ExternCanvas,
+    video: nwg::ImageFrame,
 
     #[nwg_control(text: "RW")]
     #[nwg_layout_item(layout: layout, col: 3, row: 9)]
@@ -217,7 +205,7 @@ impl QuietWordsApp {
         dv.insert_column_with_width("End", 80);
         dv.insert_column_with_width("Duration", 80);
         dv.insert_column_with_width("Lines", 40);
-        dv.insert_column_with_width("Text", 180);
+        dv.insert_column_with_width("Text", 160);
 
         // dv.update_item(4, nwg::InsertListViewItem { image: Some(1), ..Default::default() });
     }
@@ -294,6 +282,22 @@ impl QuietWordsApp {
     }
 
     fn save_subtitle (&self) {
+    }
+
+    fn paint(&self, data: &nwg::EventData) {
+    }
+
+    fn events(&self, evt: nwg::Event) {
+        use nwg::Event as E;
+        use nwg::MousePressEvent as M;
+
+        match evt {
+            // E::OnMousePress(M::MousePressLeftUp) => { self.clicked.set(false); },
+            // E::OnMousePress(M::MousePressLeftDown) => { self.clicked.set(true); },
+            _ => {},
+        }
+
+        // self.video.invalidate();
     }
 
     // fn update_view(&self) {
